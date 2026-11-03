@@ -29,7 +29,7 @@ CI runs the install, lint, typecheck, and production build.
 - Drawing is in `src/lib/orbit/draw.ts`.
 - The page and the dock are in `src/components/orbit/OrbitSim.tsx`.
 
-Keep a pull request to one idea, and say how to see the change. Do not commit secrets or `.env` files.
+Keep a pull request to one idea, and say how to see the change. Do not commit secrets or a filled-in `.env`. The live-preview OAuth secret belongs in `GROK_PREVIEW_CLIENT_SECRET` (see `.env.example`). There is no fallback in the repo.
 
 ## Issues
 

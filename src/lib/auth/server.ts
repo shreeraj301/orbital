@@ -14,9 +14,11 @@
  * Tri-mode:
  *   - Deployed: the deployer injects a per-app `GROK_AUTH_*` + `BETTER_AUTH_URL`
  *     + `DATABASE_URL`, so real federated auth is persisted in Postgres.
- *   - Sandbox live preview: no injection -> falls back to the shared **preview
- *     client** (`./preview`) and derives the preview's `https://*.grok-sandbox.com`
- *     origin from the request, so real sign-in works (no demo users). Sessions
+ *   - Sandbox live preview: no per-app injection -> the shared preview client
+ *     (`./preview`). Its secret is `GROK_PREVIEW_CLIENT_SECRET` from the
+ *     environment, with no committed value. The preview's
+ *     `https://*.grok-sandbox.com` origin is derived from the request, so real
+ *     sign-in works when that secret is set (no demo users). Sessions
  *     and identities persist in the embedded PGLite DB (same DB as app data);
  *     the process restart wipes both. Live-preview iframe clients use a bearer
  *     token (partitioned cookies) — see `client.ts`.
@@ -74,9 +76,10 @@ const env = (key: string): string | undefined => {
 // provisions auth; set it to "false" to force auth off everywhere (dev user).
 const authDisabled = env("VITE_AUTH_ENABLED") === "false";
 
-// Broker federation creds: the deployer injects a per-app client when deployed;
-// otherwise fall back to the shared live-preview client, which the broker accepts
-// for any `*.grok-sandbox.com` callback (see `./preview`).
+// Broker federation creds: the deployer injects a per-app client when deployed.
+// Otherwise use the shared live-preview client. Its secret comes only from
+// GROK_PREVIEW_CLIENT_SECRET (see `./preview`). The broker accepts that client
+// for any `*.grok-sandbox.com` callback.
 const grokIssuer = env("GROK_AUTH_ISSUER") ?? GROK_ISSUER_DEFAULT;
 const grokClientId = env("GROK_AUTH_CLIENT_ID") ?? PREVIEW_CLIENT_ID;
 const grokClientSecret = env("GROK_AUTH_CLIENT_SECRET") ?? PREVIEW_CLIENT_SECRET;
