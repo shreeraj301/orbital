@@ -687,7 +687,6 @@ export function OrbitSim() {
       delete window.__orbit
     }
     // Refs hold the live sim; restarting the loop would hitch the preview.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const localOf = (clientX: number, clientY: number) => {
